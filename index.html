@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Aplikasi Struktur Data & Algoritma</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f0f4f8; /* Light blue-gray background */
+        color: #333;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .section-content {
+        display: none; /* Hidden by default */
+      }
+      .active-section {
+        display: block; /* Shown when active */
+      }
+      .input-group {
+        margin-bottom: 1rem;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #4a5568;
+      }
+      .input-group input[type="text"],
+      .input-group input[type="number"],
+      .input-group select { /* Add select to styling */
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid #cbd5e0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        color: #4a5568;
+        background-color: #ffffff;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease-in-out;
+      }
+      .input-group input[type="text"]:focus,
+      .input-group input[type="number"]:focus,
+      .input-group select:focus { /* Add select to focus styling */
+        border-color: #4299e1;
+        box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        outline: none;
+      }
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .btn-primary {
+        background-color: #4299e1; /* Blue */
+        color: white;
+      }
+      .btn-primary:hover {
+        background-color: #3182ce; /* Darker Blue */
+      }
+      .btn-secondary {
+        background-color: #a0aec0; /* Gray */
+        color: white;
+      }
+      .btn-secondary:hover {
+        background-color: #718096; /* Darker Gray */
+      }
+      .result-box {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-family: monospace;
+        white-space: pre-wrap; /* Preserve whitespace and wrap text */
+        word-wrap: break-word; /* Break long words */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        color: #2d3748;
+      }
+      .error-message {
+        color: #e53e3e; /* Red */
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+      }
+      .success-message {
+        color: #38a169; /* Green */
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+      }
+      /* Splash screen specific styles */
+      #splash-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px); /* Adjust based on header height */
+        text-align: center;
+        background: linear-gradient(
+          to right,
+          #63b3ed,
+          #81e6d9
+        ); /* Gradient background */
+        color: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+      #splash-screen h1 {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+      }
+      #splash-screen p {
+        font-size: 1.25rem;
+        max-width: 800px;
+        line-height: 1.6;
+      }
+      .main-content {
+        min-height: calc(
+          100vh - 80px
+        ); /* Ensure content takes full height below header */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-blue-600 p-4 shadow-md sticky top-0 z-50">
+      <nav class="container flex justify-between items-center">
+        <h1
+          class="text-white text-2xl font-bold rounded-lg px-3 py-1 bg-blue-700 shadow-lg"
+        >
+          Aplikasi Struktur Data
+        </h1>
+        <div class="flex space-x-4">
+          <button class="btn btn-secondary" onclick="showSection('splash')">
+            Home
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('array')">
+            Array
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('expression')">
+            Ekspresi
+          </button>
+          <button
+            class="btn btn-secondary"
+            onclick="showSection('binary-tree')"
+          >
+            Pohon Biner
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('searching')">
+            Pencarian
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('sorting')">
+            Sorting
+          </button>
+          <button class="btn btn-secondary" onclick="showSection('hashing')">
+            Hashing
+          </button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="flex-grow container mt-8">
+      <!-- Splash Screen -->
+      <section id="splash-screen" class="active-section">
+        <h1 class="text-5xl font-extrabold mb-4">Selamat Datang!</h1>
+        <p class="text-xl leading-relaxed">
+          Aplikasi ini dirancang sebagai alat bantu pembelajaran untuk Mata
+          Kuliah Struktur Data dan Algoritma. Anda dapat menjelajahi berbagai
+          konsep seperti Array, Konversi Ekspresi (Prefix, Infix, Postfix),
+          Pohon Biner, Algoritma Pencarian (Sequential, Binary), Algoritma
+          Sorting (Bubble, Insertion, Shell, Merge, Quick, Heap, Radix), dan
+          Hashing. Gunakan menu di atas untuk memulai simulasi dan memahami cara
+          kerja masing-masing struktur data dan algoritma.
+        </p>
+      </section>
+
+      <!-- Array Section -->
+      <section
+        id="array-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">Array</h2>
+        <div class="input-group">
+          <label for="arrayInput"
+            >Masukkan elemen array (dipisahkan spasi, cth: 1 2 3 4 5):</label
+          >
+          <input
+            type="text"
+            id="arrayInput"
+            placeholder="Contoh: 10 20 5 15 30"
+          />
+        </div>
+        <button class="btn btn-primary" onclick="processArray()">
+          Tampilkan Array
+        </button>
+        <div class="result-box" id="arrayOutput"></div>
+      </section>
+
+      <!-- Expression Conversion Section -->
+      <section
+        id="expression-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">
+          Konversi Ekspresi (Infix, Postfix, Prefix)
+        </h2>
+        <p class="mb-4 text-gray-700">
+          Alat ini mengkonversi ekspresi Infix ke Postfix dan Prefix. Hanya
+          mendukung karakter alfanumerik sebagai operan dan operator +, -, *, /,
+          ^. Contoh input: `A+B*C-(D/E)^F`
+        </p>
+        <div class="input-group">
+          <label for="infixInput">Masukkan ekspresi Infix:</label>
+          <input
+            type="text"
+            id="infixInput"
+            placeholder="Contoh: A+B*C-(D/E)^F"
+          />
+        </div>
+        <button class="btn btn-primary" onclick="convertExpression()">
+          Konversi Ekspresi
+        </button>
+        <div class="result-box mt-4">
+          <p><strong>Infix:</strong> <span id="infixOutput"></span></p>
+          <p><strong>Postfix:</strong> <span id="postfixOutput"></span></p>
+          <p><strong>Prefix:</strong> <span id="prefixOutput"></span></p>
+        </div>
+      </section>
+
+      <!-- Binary Tree Section -->
+      <section
+        id="binary-tree-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">
+          Pohon Biner (Binary Search Tree)
+        </h2>
+        <p class="mb-4 text-gray-700">
+          Masukkan angka untuk membangun Pohon Pencarian Biner (BST). Traversal
+          akan ditampilkan dalam urutan Preorder, Inorder, dan Postorder.
+        </p>
+        <div class="input-group">
+          <label for="treeInput"
+            >Masukkan angka (dipisahkan spasi, cth: 50 30 70 20 40):</label
+          >
+          <input
+            type="text"
+            id="treeInput"
+            placeholder="Contoh: 50 30 70 20 40 60 80"
+          />
+        </div>
+        <button class="btn btn-primary" onclick="buildAndTraverseTree()">
+          Transversal Tree
+        </button>
+        <div class="result-box mt-4">
+          <p>
+            <strong>Preorder Traversal:</strong>
+            <span id="preorderOutput"></span>
+          </p>
+          <p>
+            <strong>Inorder Traversal:</strong> <span id="inorderOutput"></span>
+          </p>
+          <p>
+            <strong>Postorder Traversal:</strong>
+            <span id="postorderOutput"></span>
+          </p>
+        </div>
+      </section>
+
+      <!-- Searching Algorithms Section -->
+      <section
+        id="searching-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">
+          Algoritma Pencarian
+        </h2>
+        <div class="input-group">
+          <label for="searchArrayInput"
+            >Masukkan elemen array (dipisahkan spasi, cth: 10 20 30 40
+            50):</label
+          >
+          <input
+            type="text"
+            id="searchArrayInput"
+            placeholder="Contoh: 10 20 30 40 50"
+          />
+        </div>
+        <div class="input-group">
+          <label for="targetInput">Masukkan elemen yang dicari:</label>
+          <input type="number" id="targetInput" placeholder="Contoh: 30" />
+        </div>
+        <div class="flex space-x-4 mb-4">
+          <button class="btn btn-primary" onclick="performSequentialSearch()">
+            Sequential Search
+          </button>
+          <button class="btn btn-primary" onclick="performBinarySearch()">
+            Binary Search
+          </button>
+        </div>
+        <div class="result-box" id="searchingOutput"></div>
+        <p class="text-sm text-gray-600 mt-2">
+          <em
+            >Catatan: Binary Search memerlukan array yang sudah diurutkan.
+            Aplikasi akan mengurutkannya secara otomatis.</em
+          >
+        </p>
+      </section>
+
+      <!-- Sorting Algorithms Section -->
+      <section
+        id="sorting-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">
+          Algoritma Sorting
+        </h2>
+        <div class="input-group">
+          <label for="sortArrayInput"
+            >Masukkan elemen array (dipisahkan spasi, cth: 50 30 70 20
+            40):</label
+          >
+          <input
+            type="text"
+            id="sortArrayInput"
+            placeholder="Contoh: 50 30 70 20 40"
+          />
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+          <button class="btn btn-primary" onclick="performSort('bubble')">
+            Bubble Sort
+          </button>
+          <button class="btn btn-primary" onclick="performSort('insertion')">
+            Insertion Sort
+          </button>
+          <button class="btn btn-primary" onclick="performSort('shell')">
+            Shell Sort
+          </button>
+          <button class="btn btn-primary" onclick="performSort('merge')">
+            Merge Sort
+          </button>
+          <button class="btn btn-primary" onclick="performSort('quick')">
+            Quick Sort
+          </button>
+          <button class="btn btn-primary" onclick="performSort('radix')">
+            Radix Sort
+          </button>
+        </div>
+        <div class="result-box" id="sortingOutput"></div>
+      </section>
+
+      <!-- Hashing Section -->
+      <section
+        id="hashing-section"
+        class="section-content p-6 bg-white rounded-lg shadow-xl"
+      >
+        <h2 class="text-3xl font-semibold mb-6 text-blue-700">Hashing</h2>
+        <div class="input-group">
+          <label for="hashArrayInput"
+            >Masukkan elemen untuk Hash Table (dipisahkan spasi, cth: 10 25 30
+            45):</label
+          >
+          <input
+            type="text"
+            id="hashArrayInput"
+            placeholder="Contoh: 10 25 30 45"
+          />
+        </div>
+        <div class="input-group">
+          <label for="hashTableSizeInput"
+            >Ukuran Hash Table (contoh: 10):</label
+          >
+          <input type="number" id="hashTableSizeInput" value="10" min="1" />
+        </div>
+        <div class="input-group">
+            <label for="hashingMethodSelect">Pilih Metode Hashing:</label>
+            <select id="hashingMethodSelect" class="form-select">
+                <option value="division">Metode Pembagian</option>
+                <option value="midsquare">Metode Midsquare</option>
+                <option value="digitFolding">Metode Penjumlahan Digit</option>
+            </select>
+        </div>
+        <button class="btn btn-primary mb-4" onclick="initHashTable()">
+          Buat & Isi Hash Table
+        </button>
+
+        <!-- Removed Hash Table Operations -->
+        <!--
+        <div id="hashTableActions" class="hidden">
+          <h3 class="text-xl font-semibold mb-4 text-blue-600">
+            Operasi Hash Table
+          </h3>
+          <div class="flex flex-col md:flex-row md:space-x-4 mb-4">
+            <div class="input-group flex-grow">
+              <label for="hashKeyInput">Masukkan key untuk operasi:</label>
+              <input
+                type="number"
+                id="hashKeyInput"
+                placeholder="Masukkan angka"
+              />
+            </div>
+            <div class="flex space-x-2 mt-4 md:mt-0">
+              <button class="btn btn-primary" onclick="searchHashTable()">
+                Cari
+              </button>
+              <button class="btn btn-secondary" onclick="removeHashTableKey()">
+                Hapus
+              </button>
+              <button
+                class="btn btn-secondary"
+                onclick="displayCurrentHashTable()"
+              >
+                Tampilkan
+              </button>
+            </div>
+          </div>
+        </div>
+        -->
+        <div class="result-box" id="hashingOutput"></div>
+      </section>
+    </main>
+
+    <footer class="bg-blue-600 p-4 mt-8 shadow-inner">
+      <div class="container text-center text-white text-sm">
+        &copy; 2025 Aprizal Nurindra Tama. Semua Hak Dilindungi.
+      </div>
+    </footer>
+
+    <script>
+      // --- Global Utility Functions (from C++ equivalent) ---
+      function parseInputNumbers(input) {
+        if (!input) return [];
+        return input
+          .split(" ")
+          .filter((s) => s.trim() !== "")
+          .map(Number)
+          .filter((n) => !isNaN(n));
+      }
+
+      function vectorToString(arr) {
+        if (arr.length === 0) {
+          return "[]";
+        }
+        return "[" + arr.join(", ") + "]";
+      }
+
+      function showSection(sectionId) {
+        document.querySelectorAll(".section-content").forEach((section) => {
+          section.classList.remove("active-section");
+        });
+        document
+          .getElementById("splash-screen")
+          .classList.remove("active-section"); // Always hide splash
+
+        const targetSection = document.getElementById(sectionId + "-section");
+        if (targetSection) {
+          targetSection.classList.add("active-section");
+        } else if (sectionId === "splash") {
+          document
+            .getElementById("splash-screen")
+            .classList.add("active-section");
+        }
+      }
+
+      // Initialize display to splash screen
+      document.addEventListener("DOMContentLoaded", () => {
+        showSection("splash");
+      });
+
+      // --- 1. Array Operations ---
+      function processArray() {
+        const inputStr = document.getElementById("arrayInput").value;
+        const numbers = parseInputNumbers(inputStr);
+        document.getElementById("arrayOutput").textContent =
+          "Array: " + vectorToString(numbers);
+      }
+
+      // --- 2. Expression Conversion (Prefix, Infix, Postfix) ---
+      const Expression = {
+        isOperator: (char) => {
+          return ["+", "-", "*", "/", "^"].includes(char);
+        },
+        precedence: (op) => {
+          if (op === "^") return 3;
+          if (op === "*" || op === "/") return 2;
+          if (op === "+" || op === "-") return 1;
+          return 0;
+        },
+        infixToPostfix: (infix) => {
+          let postfix = "";
+          const s = []; // Stack
+
+          for (let i = 0; i < infix.length; i++) {
+            const c = infix[i];
+
+            if (/[a-zA-Z0-9]/.test(c)) {
+              // isalnum equivalent
+              postfix += c;
+            } else if (c === "(") {
+              s.push(c);
+            } else if (c === ")") {
+              while (s.length > 0 && s[s.length - 1] !== "(") {
+                postfix += s.pop();
+              }
+              if (s.length > 0) s.pop(); // Pop '('
+            } else if (Expression.isOperator(c)) {
+              while (
+                s.length > 0 &&
+                Expression.precedence(s[s.length - 1]) >=
+                  Expression.precedence(c)
+              ) {
+                postfix += s.pop();
+              }
+              s.push(c);
+            }
+          }
+          while (s.length > 0) {
+            postfix += s.pop();
+          }
+          return postfix;
+        },
+        infixToPrefix: (infix) => {
+          let reversedInfix = infix.split("").reverse().join("");
+          for (let i = 0; i < reversedInfix.length; i++) {
+            if (reversedInfix[i] === "(")
+              reversedInfix =
+                reversedInfix.substring(0, i) +
+                ")" +
+                reversedInfix.substring(i + 1);
+            else if (reversedInfix[i] === ")")
+              reversedInfix =
+                reversedInfix.substring(0, i) +
+                "(" +
+                reversedInfix.substring(i + 1);
+          }
+
+          let postfixOfReversed = Expression.infixToPostfix(reversedInfix);
+          return postfixOfReversed.split("").reverse().join("");
+        },
+      };
+
+      function convertExpression() {
+        const infixInput = document.getElementById("infixInput").value.trim();
+        if (!infixInput) {
+          document.getElementById("infixOutput").textContent =
+            "Input ekspresi infix.";
+          document.getElementById("postfixOutput").textContent = "";
+          document.getElementById("prefixOutput").textContent = "";
+          return;
+        }
+        document.getElementById("infixOutput").textContent = infixInput;
+        document.getElementById("postfixOutput").textContent =
+          Expression.infixToPostfix(infixInput);
+        document.getElementById("prefixOutput").textContent =
+          Expression.infixToPrefix(infixInput);
+      }
+
+      // --- 3. Binary Tree (Binary Search Tree) ---
+      const BinaryTree = {
+        Node: function (val) {
+          this.data = val;
+          this.left = null;
+          this.right = null;
+        },
+        insert: function (node, data) {
+          if (node === null) {
+            return new BinaryTree.Node(data);
+          }
+          if (data < node.data) {
+            node.left = BinaryTree.insert(node.left, data);
+          } else if (data > node.data) {
+            node.right = BinaryTree.insert(node.right, data);
+          }
+          return node;
+        },
+        buildBST: function (data) {
+          let root = null;
+          for (const val of data) {
+            root = BinaryTree.insert(root, val);
+          }
+          return root;
+        },
+        preorderTraversal: function (node, outputArray) {
+          if (node === null) return;
+          outputArray.push(node.data);
+          BinaryTree.preorderTraversal(node.left, outputArray);
+          BinaryTree.preorderTraversal(node.right, outputArray);
+        },
+        inorderTraversal: function (node, outputArray) {
+          if (node === null) return;
+          BinaryTree.inorderTraversal(node.left, outputArray);
+          outputArray.push(node.data);
+          BinaryTree.inorderTraversal(node.right, outputArray);
+        },
+        postorderTraversal: function (node, outputArray) {
+          if (node === null) return;
+          BinaryTree.postorderTraversal(node.left, outputArray);
+          BinaryTree.postorderTraversal(node.right, outputArray);
+          outputArray.push(node.data);
+        },
+        // No explicit deleteTree needed in JS for garbage collection
+      };
+
+      function buildAndTraverseTree() {
+        const inputStr = document.getElementById("treeInput").value;
+        const numbers = parseInputNumbers(inputStr);
+
+        if (numbers.length === 0) {
+          document.getElementById("preorderOutput").textContent =
+            "Tidak ada nomor yang diberikan.";
+          document.getElementById("inorderOutput").textContent = "";
+          document.getElementById("postorderOutput").textContent = "";
+          return;
+        }
+
+        const root = BinaryTree.buildBST(numbers);
+        let preorderArr = [];
+        let inorderArr = [];
+        let postorderArr = [];
+
+        BinaryTree.preorderTraversal(root, preorderArr);
+        BinaryTree.inorderTraversal(root, inorderArr);
+        BinaryTree.postorderTraversal(root, postorderArr);
+
+        document.getElementById("preorderOutput").textContent =
+          vectorToString(preorderArr);
+        document.getElementById("inorderOutput").textContent =
+          vectorToString(inorderArr);
+        document.getElementById("postorderOutput").textContent =
+          vectorToString(postorderArr);
+      }
+
+      // --- 4. Searching Algorithms ---
+      const Searching = {
+        sequentialSearch: (arr, target) => {
+          for (let i = 0; i < arr.length; i++) {
+            if (arr[i] === target) {
+              return i;
+            }
+          }
+          return -1;
+        },
+        binarySearch: (arr, target) => {
+          let left = 0;
+          let right = arr.length - 1;
+
+          while (left <= right) {
+            let mid = Math.floor(left + (right - left) / 2);
+
+            if (arr[mid] === target) {
+              return mid;
+            }
+            if (arr[mid] < target) {
+              left = mid + 1;
+            } else {
+              right = mid - 1;
+            }
+          }
+          return -1;
+        },
+      };
+
+      function performSequentialSearch() {
+        const inputStr = document.getElementById("searchArrayInput").value;
+        const numbers = parseInputNumbers(inputStr);
+        const target = Number(document.getElementById("targetInput").value);
+        const outputDiv = document.getElementById("searchingOutput");
+
+        if (numbers.length === 0) {
+          outputDiv.textContent = "Array kosong, tidak bisa dicari.";
+          return;
+        }
+        if (isNaN(target)) {
+          outputDiv.textContent = "Masukkan target yang valid.";
+          return;
+        }
+
+        const index = Searching.sequentialSearch(numbers, target);
+        if (index !== -1) {
+          outputDiv.textContent = `Sequential Search: Ditemukan ${target} pada index ${index}.`;
+        } else {
+          outputDiv.textContent = `Sequential Search: ${target} tidak ditemukan.`;
+        }
+      }
+
+      function performBinarySearch() {
+        const inputStr = document.getElementById("searchArrayInput").value;
+        let numbers = parseInputNumbers(inputStr);
+        const target = Number(document.getElementById("targetInput").value);
+        const outputDiv = document.getElementById("searchingOutput");
+
+        if (numbers.length === 0) {
+          outputDiv.textContent = "Array kosong, tidak bisa dicari.";
+          return;
+        }
+        if (isNaN(target)) {
+          outputDiv.textContent = "Masukkan target yang valid.";
+          return;
+        }
+
+        // Binary search requires a sorted array
+        numbers.sort((a, b) => a - b);
+        outputDiv.textContent = `Array untuk Binary Search (sudah diurutkan): ${vectorToString(
+          numbers
+        )}\n`;
+
+        const index = Searching.binarySearch(numbers, target);
+        if (index !== -1) {
+          outputDiv.textContent += `Binary Search: Ditemukan ${target} pada index ${index}.`;
+        } else {
+          outputDiv.textContent += `Binary Search: ${target} tidak ditemukan.`;
+        }
+      }
+
+      // --- 5. Sorting Algorithms ---
+      const Sorting = {
+        swap: (arr, i, j) => {
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        },
+        bubbleSort: (arr) => {
+          let n = arr.length;
+          for (let i = 0; i < n - 1; i++) {
+            let swapped = false;
+            for (let j = 0; j < n - i - 1; j++) {
+              if (arr[j] > arr[j + 1]) {
+                Sorting.swap(arr, j, j + 1);
+                swapped = true;
+              }
+            }
+            if (!swapped) break;
+          }
+          return arr;
+        },
+        insertionSort: (arr) => {
+          let n = arr.length;
+          for (let i = 1; i < n; i++) {
+            let key = arr[i];
+            let j = i - 1;
+            while (j >= 0 && arr[j] > key) {
+              arr[j + 1] = arr[j];
+              j--;
+            }
+            arr[j + 1] = key;
+          }
+          return arr;
+        },
+        shellSort: (arr) => {
+          let n = arr.length;
+          for (
+            let gap = Math.floor(n / 2);
+            gap > 0;
+            gap = Math.floor(gap / 2)
+          ) {
+            for (let i = gap; i < n; i++) {
+              let temp = arr[i];
+              let j;
+              for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
+                arr[j] = arr[j - gap];
+              }
+              arr[j] = temp;
+            }
+          }
+          return arr;
+        },
+        merge: (arr, l, m, r) => {
+          let n1 = m - l + 1;
+          let n2 = r - m;
+          let L = new Array(n1);
+          let R = new Array(n2);
+
+          for (let i = 0; i < n1; i++) L[i] = arr[l + i];
+          for (let j = 0; j < n2; j++) R[j] = arr[m + 1 + j];
+
+          let i = 0,
+            j = 0,
+            k = l;
+          while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+              arr[k++] = L[i++];
+            } else {
+              arr[k++] = R[j++];
+            }
+          }
+          while (i < n1) arr[k++] = L[i++];
+          while (j < n2) arr[k++] = R[j++];
+        },
+        mergeSort: (arr, l, r) => {
+          if (l >= r) return;
+          let m = l + Math.floor((r - l) / 2);
+          Sorting.mergeSort(arr, l, m);
+          Sorting.mergeSort(arr, m + 1, r);
+          Sorting.merge(arr, l, m, r);
+          return arr; // For the initial call to get the sorted array
+        },
+        // Wrapper for mergeSort
+        mergeSortWrapper: (arr) => {
+          if (arr.length === 0) return [];
+          const tempArr = [...arr]; // Create a copy to sort
+          Sorting.mergeSort(tempArr, 0, tempArr.length - 1);
+          return tempArr;
+        },
+
+        partition: (arr, low, high) => {
+          let pivot = arr[high];
+          let i = low - 1;
+          for (let j = low; j <= high - 1; j++) {
+            if (arr[j] < pivot) {
+              i++;
+              Sorting.swap(arr, i, j);
+            }
+          }
+          Sorting.swap(arr, i + 1, high);
+          return i + 1;
+        },
+        quickSort: (arr, low, high) => {
+          if (low < high) {
+            let pi = Sorting.partition(arr, low, high);
+            Sorting.quickSort(arr, low, pi - 1);
+            Sorting.quickSort(arr, pi + 1, high);
+          }
+          return arr; // For the initial call to get the sorted array
+        },
+        // Wrapper for quickSort
+        quickSortWrapper: (arr) => {
+          if (arr.length === 0) return [];
+          const tempArr = [...arr]; // Create a copy to sort
+          Sorting.quickSort(tempArr, 0, tempArr.length - 1);
+          return tempArr;
+        },
+
+        heapify: (arr, n, i) => {
+          let largest = i;
+          let left = 2 * i + 1;
+          let right = 2 * i + 2;
+
+          if (left < n && arr[left] > arr[largest]) largest = left;
+          if (right < n && arr[right] > arr[largest]) largest = right;
+
+          if (largest !== i) {
+            Sorting.swap(arr, i, largest);
+            Sorting.heapify(arr, n, largest);
+          }
+        },
+        heapSort: (arr) => {
+          let n = arr.length;
+          for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+            Sorting.heapify(arr, n, i);
+          }
+          for (let i = n - 1; i > 0; i--) {
+            Sorting.swap(arr, 0, i);
+            Sorting.heapify(arr, i, 0);
+          }
+          return arr;
+        },
+        getMax: (arr) => {
+          if (arr.length === 0) return 0; // Handle empty array
+          return Math.max(...arr);
+        },
+        countingSort: (arr, exp) => {
+          let n = arr.length;
+          let output = new Array(n).fill(0);
+          let count = new Array(10).fill(0);
+
+          for (let i = 0; i < n; i++) {
+            count[Math.floor(arr[i] / exp) % 10]++;
+          }
+          for (let i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+          }
+          for (let i = n - 1; i >= 0; i--) {
+            output[count[Math.floor(arr[i] / exp) % 10] - 1] = arr[i];
+            count[Math.floor(arr[i] / exp) % 10]--;
+          }
+          for (let i = 0; i < n; i++) {
+            arr[i] = output[i];
+          }
+        },
+        radixSort: (arr) => {
+          if (arr.length === 0) return [];
+          let m = Sorting.getMax(arr);
+          for (let exp = 1; Math.floor(m / exp) > 0; exp *= 10) {
+            Sorting.countingSort(arr, exp);
+          }
+          return arr;
+        },
+      };
+
+      function performSort(sortType) {
+        const inputStr = document.getElementById("sortArrayInput").value;
+        const originalNumbers = parseInputNumbers(inputStr);
+        const outputDiv = document.getElementById("sortingOutput");
+
+        if (originalNumbers.length === 0) {
+          outputDiv.textContent = "Tidak ada elemen untuk diurutkan.";
+          return;
+        }
+
+        let tempArr = [...originalNumbers]; // Create a copy to sort
+        let sortedArr;
+
+        outputDiv.innerHTML = `<strong>Array Asli:</strong> ${vectorToString(
+          originalNumbers
+        )}<br>`;
+
+        try {
+          switch (sortType) {
+            case "bubble":
+              sortedArr = Sorting.bubbleSort(tempArr);
+              outputDiv.innerHTML += `<strong>Bubble Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "insertion":
+              sortedArr = Sorting.insertionSort(tempArr);
+              outputDiv.innerHTML += `<strong>Insertion Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "shell":
+              sortedArr = Sorting.shellSort(tempArr);
+              outputDiv.innerHTML += `<strong>Shell Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "merge":
+              sortedArr = Sorting.mergeSortWrapper(tempArr);
+              outputDiv.innerHTML += `<strong>Merge Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "quick":
+              sortedArr = Sorting.quickSortWrapper(tempArr);
+              outputDiv.innerHTML += `<strong>Quick Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "heap":
+              sortedArr = Sorting.heapSort(tempArr);
+              outputDiv.innerHTML += `<strong>Heap Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            case "radix":
+              sortedArr = Sorting.radixSort(tempArr);
+              outputDiv.innerHTML += `<strong>Radix Sort:</strong> ${vectorToString(
+                sortedArr
+              )}<br>`;
+              break;
+            default:
+              outputDiv.innerHTML += `<span class="error-message">Algoritma sorting tidak dikenal.</span>`;
+          }
+        } catch (e) {
+          outputDiv.innerHTML += `<span class="error-message">Error saat menjalankan ${sortType} : ${e.message}</span>`;
+        }
+      }
+
+      // --- 6. Hashing ---
+      let currentHashTable = null; // Global instance for Hashing
+
+      const Hashing = {
+            /**
+             * Constructs a new HashTable.
+             * This table uses chaining to handle collisions, where each bucket can store multiple keys.
+             * @param {number} size The desired size of the hash table (number of buckets).
+             * @param {string} method The hashing method to use for key-to-index mapping
+             * ('division', 'midsquare', 'digitFolding').
+             */
+            HashTable: function (size, method) {
+                this.tableSize = size;
+                // Initialize the table as an array of arrays. Each inner array represents a bucket (or chain).
+                this.table = new Array(size).fill(null).map(() => []);
+                this.hashingMethod = method; // Store the selected hashing method for internal use
+
+                /**
+                 * Implements the Division Method for hashing.
+                 * This is one of the simplest hashing functions, widely used.
+                 * The hash value is the remainder of the key divided by the table size.
+                 * @param {number} key The numeric key to hash.
+                 * @returns {number} The calculated hash index (0 to tableSize-1).
+                 */
+                this.divisionHash = (key) => {
+                    return key % this.tableSize;
+                };
+
+                /**
+                 * Implements the Midsquare Method for hashing.
+                 * This method squares the key, then extracts a specific number of middle digits from the result.
+                 * These extracted digits are then used (often modulo table size) as the hash index.
+                 * @param {number} key The numeric key to hash.
+                 * @returns {number} The calculated hash index.
+                 */
+                this.midsquareHash = (key) => {
+                    // Step 1: Square the key
+                    let squared = key * key;
+                    let s = String(squared); // Convert the squared number to a string for digit extraction
+                    let len = s.length; // Length of the squared number string
+
+                    // Step 2: Determine how many digits to extract.
+                    // This should be enough digits to represent any index within the hash table (0 to tableSize - 1).
+                    // For example, if tableSize is 100, indices range from 0-99, requiring 2 digits.
+                    let digitsToExtract = Math.max(1, String(this.tableSize - 1).length);
+
+                    // Ensure we don't try to extract more digits than available in the squared number string
+                    if (digitsToExtract > len) {
+                        digitsToExtract = len;
+                    }
+
+                    // Step 3: Calculate the start index to extract digits from the middle
+                    let startIndex = Math.floor((len - digitsToExtract) / 2);
+                    // Ensure startIndex is not negative, which can happen for very small squared numbers
+                    if (startIndex < 0) startIndex = 0;
+
+                    // Step 4: Extract the substring containing the middle digits
+                    let extractedStr = s.substring(startIndex, startIndex + digitsToExtract);
+
+                    // Handle edge cases: if extraction results in an empty string or a non-numeric value,
+                    // it means the key was too small or resulted in an unworkable squared value for this method.
+                    // In such cases, fall back to the Division Method to ensure a valid index is always returned.
+                    if (extractedStr === '' || isNaN(parseInt(extractedStr, 10))) {
+                        return this.divisionHash(key);
+                    }
+
+                    // Step 5: Convert the extracted string back to a number and apply modulo table size
+                    return parseInt(extractedStr, 10) % this.tableSize;
+                };
+
+                /**
+                 * Implements the Digit Folding Method for hashing.
+                 * This method divides the key into parts (groups of digits), sums these parts,
+                 * and then uses the sum (often modulo table size) as the hash index.
+                 * @param {number} key The numeric key to hash.
+                 * @returns {number} The calculated hash index.
+                 */
+                this.digitFoldingHash = (key) => {
+                    let sum = 0;
+                    let keyStr = String(key); // Convert the key to a string to easily access its digits
+
+                    // Determine the size of each "fold" or digit group.
+                    // Similar to midsquare, this is often based on the number of digits needed for the table size.
+                    // A simple approach is to fold every 'X' digits. For simplicity, let's use 2 or 3 digits.
+                    // Or, more robustly, match the 'magnitude' of the table size.
+                    let foldingSize = Math.max(1, String(this.tableSize - 1).length);
+                    // If the table size is small (e.g., 10), folding size could be 1.
+                    // If table size is 100, folding size could be 2.
+
+                    // Iterate through the key string, taking chunks of 'foldingSize' digits at a time
+                    for (let i = 0; i < keyStr.length; i += foldingSize) {
+                        let partStr = keyStr.substring(i, i + foldingSize); // Get the current digit group
+                        sum += parseInt(partStr, 10); // Convert the part to an integer and add to the running sum
+                    }
+                    // Apply modulo table size to the final sum to get the hash index
+                    return sum % this.tableSize;
+                };
+
+                /**
+                 * This is the primary hash function that dispatches to the specific hashing method
+                 * based on the `this.hashingMethod` property.
+                 * @param {number} key The key to hash.
+                 * @returns {number} The calculated hash index.
+                 */
+                this.hashFunction = (key) => {
+                    switch (this.hashingMethod) {
+                        case 'division':
+                            return this.divisionHash(key);
+                        case 'midsquare':
+                            return this.midsquareHash(key);
+                        case 'digitFolding':
+                            return this.digitFoldingHash(key);
+                        default:
+                            // Fallback to division method if an unsupported method is specified
+                            console.warn("Unsupported hashing method specified. Falling back to Division Method.");
+                            return this.divisionHash(key);
+                    }
+                };
+
+                /**
+                 * Inserts a key into the hash table.
+                 * It calculates the hash index and pushes the key into the corresponding bucket.
+                 * @param {number} key The key to insert.
+                 */
+                this.insert = (key) => {
+                    const index = this.hashFunction(key);
+                    this.table[index].push(key); // Add the key to the end of the list (chain) at the calculated index
+                };
+
+                /**
+                 * Searches for a key in the hash table.
+                 * It calculates the hash index and checks if the key exists in that bucket's list.
+                 * @param {number} key The key to search for.
+                 * @returns {boolean} True if the key is found, false otherwise.
+                 */
+                this.search = (key) => {
+                    const index = this.hashFunction(key);
+                    return this.table[index].includes(key); // Check if the key exists within the array at the calculated index
+                };
+
+                /**
+                 * Removes a key from the hash table.
+                 * It calculates the hash index and filters the key out of the corresponding bucket's list.
+                 * @param {number} key The key to remove.
+                 * @returns {boolean} True if the key was successfully removed, false otherwise.
+                 */
+                this.remove = (key) => {
+                    const index = this.hashFunction(key);
+                    const initialLength = this.table[index].length; // Store initial length to check if removal occurred
+                    // Filter out the key from the array at the calculated index, creating a new array without the key
+                    this.table[index] = this.table[index].filter((val) => val !== key);
+                    return this.table[index].length < initialLength; // Returns true if the array length decreased (meaning key was removed)
+                };
+
+                /**
+                 * Generates a formatted string representation of the hash table's current contents.
+                 * This helps in visualizing the distribution of keys across the buckets.
+                 * @returns {string} The formatted string displaying each bucket and its contents.
+                 */
+                this.display = () => {
+                    let output = `Isi Hash Table (Metode: ${this.hashingMethod === 'division' ? 'Metode Pembagian' : this.hashingMethod === 'midsquare' ? 'Metode Midsquare' : 'Metode Penjumlahan Digit'}):\n`;
+                    for (let i = 0; i < this.tableSize; i++) {
+                        output += `[${i}]`; // Display the bucket index
+                        // Append all elements in the current bucket, separated by ' -> '
+                        for (const val of this.table[i]) {
+                            output += ` -> ${val}`;
+                        }
+                        output += "\n"; // Move to a new line for the next bucket
+                    }
+                    return output;
+                };
+            },
+        };
+
+        /**
+         * Initializes or re-initializes the hash table based on user inputs from the UI.
+         * Reads the input array elements, table size, and the selected hashing method.
+         * Then, it creates the hash table, inserts the numbers, and displays the process and final state.
+         */
+        function initHashTable() {
+            const inputStr = document.getElementById("hashArrayInput").value;
+            const numbers = parseInputNumbers(inputStr);
+            const tableSize = Number(
+                document.getElementById("hashTableSizeInput").value
+            );
+            const hashingMethod = document.getElementById("hashingMethodSelect").value;
+            const outputDiv = document.getElementById("hashingOutput");
+            // const hashTableActionsDiv = document.getElementById("hashTableActions"); // Removed as actions are removed
+
+            // Validate the table size input to ensure it's a positive number
+            if (isNaN(tableSize) || tableSize <= 0) {
+                outputDiv.innerHTML = `<span class="error-message">Ukuran Hash Table salah. Masukkan angka positif.</span>`;
+                // hashTableActionsDiv.classList.add("hidden"); // Removed
+                return;
+            }
+
+            // Create a new hash table instance with the specified size and method
+            currentHashTable = new Hashing.HashTable(tableSize, hashingMethod);
+            outputDiv.innerHTML =
+                `<span class="success-message">Hash Table dibuat menggunakan metode ${hashingMethod === 'division' ? 'Metode Pembagian' : hashingMethod === 'midsquare' ? 'Metode Midsquare' : 'Metode Penjumlahan Digit'}.</span><br>`;
+
+            // Insert each number from the input array into the new hash table
+            // and display which index each number was inserted at.
+            for (const num of numbers) {
+                const index = currentHashTable.hashFunction(num);
+                currentHashTable.insert(num);
+                outputDiv.innerHTML += `Memasukkan ${num} pada indeks ${index}<br>`;
+            }
+            outputDiv.innerHTML += `<br>${currentHashTable.display()}`; // Display the final state of the hash table
+            // hashTableActionsDiv.classList.remove("hidden"); // Removed
+        }
+
+        // Removed searchHashTable(), removeHashTableKey(), and displayCurrentHashTable() functions.
+
+    </script>
+</body>
+</html>
